@@ -18,6 +18,7 @@ public class SnakeMove : MonoBehaviour
 
     private float moveDistance = 1.0f;
     private Direction moveDirection = Direction.Right;
+    private Direction lastMoveDirection = Direction.Right;
 
     public GameObject snake;
 
@@ -49,12 +50,13 @@ public class SnakeMove : MonoBehaviour
                 snake.transform.position = new Vector3(snake.transform.position.x - moveDistance, snake.transform.position.y, snake.transform.position.z);
                 break;
         }
+        lastMoveDirection = moveDirection;
     }
 
     public void ChangeDirection(Direction moveDirection)
     {
         // If current and new direction are not opposite
-        if (((int)this.moveDirection + (int)moveDirection) % 2 == 1)
+        if (((int)lastMoveDirection + (int)moveDirection) % 2 == 1)
             this.moveDirection = moveDirection;
        
     }
