@@ -52,6 +52,7 @@ crashlytics-build.properties
 
 *.meta
 *.htm
+Assets/Scenes/*.unity
 
 
 

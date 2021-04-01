@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SnakeMove : MonoBehaviour
 {
+    private SnakeMapManager snakeMapManager;
+
     public enum Direction
     {
         Left,
@@ -11,6 +13,9 @@ public class SnakeMove : MonoBehaviour
         Right,
         Up
     }
+
+    private int startingX = 9;
+    private int startingY = 5;
 
     // In seconds
     private float moveTimer = 0.6f;
@@ -22,6 +27,13 @@ public class SnakeMove : MonoBehaviour
 
     public GameObject snake;
 
+    void Start()
+    {
+        snakeMapManager = FindObjectOfType<SnakeMapManager>();
+
+        StartGame();
+    }
+
     void FixedUpdate()
     {
         timePassed += Time.fixedDeltaTime;
@@ -31,6 +43,14 @@ public class SnakeMove : MonoBehaviour
             Move();
             timePassed = 0;
         }
+    }
+
+    public void StartGame()
+    {
+        snake.transform.position = new Vector2(startingX, startingY);
+        moveDirection = Direction.Right;
+        lastMoveDirection = Direction.Right;
+
     }
 
     private void Move()
@@ -50,7 +70,15 @@ public class SnakeMove : MonoBehaviour
                 snake.transform.position = new Vector3(snake.transform.position.x - moveDistance, snake.transform.position.y, snake.transform.position.z);
                 break;
         }
-        lastMoveDirection = moveDirection;
+
+        if (snakeMapManager.CheckAlive((int)snake.transform.position.x, (int)snake.transform.position.y))
+        {
+            lastMoveDirection = moveDirection;
+        }
+        else
+        {
+            StartGame();
+        }
     }
 
     public void ChangeDirection(Direction moveDirection)

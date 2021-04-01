@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class SnakeMapManager : MonoBehaviour
 {
-    public GameObject wall;
+    public GameObject wallPrefab;
+    public Transform wallParent;
     
-    private int mapWidth = 17;
+    private int mapWidth = 18;
     private int mapHeight = 10;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -33,7 +34,7 @@ public class SnakeMapManager : MonoBehaviour
     {
         for (int y = 0; y < mapHeight + 1; y++)
         {
-            Instantiate(wall, new Vector2(x, y), Quaternion.identity);
+            CreateWall(x, y);
         }
     }
 
@@ -41,7 +42,26 @@ public class SnakeMapManager : MonoBehaviour
     {
         for (int x = 1; x < mapWidth; x++)
         {
-            Instantiate(wall, new Vector2(x, y), Quaternion.identity);
+            CreateWall(x, y);
         }
+    }
+
+    private void CreateWall(int x, int y)
+    {
+        GameObject currWall = Instantiate(wallPrefab, new Vector2(x, y), Quaternion.identity);
+        currWall.transform.SetParent(wallParent);
+    }
+
+    public bool CheckAlive(int x, int y)
+    {
+        foreach (Transform wall in wallParent)
+        {
+            if (x == wall.position.x && y == wall.position.y)
+            {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
