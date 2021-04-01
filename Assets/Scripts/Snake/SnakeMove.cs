@@ -6,6 +6,9 @@ public class SnakeMove : MonoBehaviour
 {
     private SnakeMapManager snakeMapManager;
 
+    public GameObject snakePrefab;
+    public Transform snakeParent;
+
     public enum Direction
     {
         Left,
@@ -24,7 +27,6 @@ public class SnakeMove : MonoBehaviour
     private Direction moveDirection = Direction.Right;
     private Direction lastMoveDirection = Direction.Right;
 
-    public GameObject snakePrefab;
     private List<GameObject> snake = new List<GameObject>();
 
     void Start()
@@ -49,7 +51,7 @@ public class SnakeMove : MonoBehaviour
     public void StartGame()
     {
         DestroySnake();
-        snake.Add(Instantiate(snakePrefab, startingPos, Quaternion.identity));
+        CreateSnake(startingPos);
 
         moveDirection = Direction.Right;
         lastMoveDirection = Direction.Right;
@@ -97,12 +99,12 @@ public class SnakeMove : MonoBehaviour
     private void CheckPosition()
     { 
         Vector2 snakePos = new Vector2(snake[0].transform.position.x, snake[0].transform.position.y);
-        Vector2 tail = snakeMapManager.MoveSnake(snakePos);
+        Vector2 tailPos = snakeMapManager.MoveSnake(snakePos);
 
         // If new tail needs to be created
-        if (!tail.Equals(snakeMapManager.INVALIDPOS))
+        if (!tailPos.Equals(snakeMapManager.INVALIDPOS))
         {
-            snake.Add(Instantiate(snakePrefab, tail, Quaternion.identity));
+            CreateSnake(tailPos);
         }
         else
         {
@@ -123,6 +125,12 @@ public class SnakeMove : MonoBehaviour
         {
             this.moveDirection = moveDirection;
         }
+    }
+
+    public void CreateSnake(Vector2 pos)
+    {
+        snake.Add(Instantiate(snakePrefab, pos, Quaternion.identity));
+        snake[snake.Count - 1].transform.SetParent(snakeParent);
     }
 
 }
