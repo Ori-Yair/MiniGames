@@ -298,6 +298,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1850436888}
   - component: {fileID: 1850436889}
+  - component: {fileID: 1850436890}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -332,3 +333,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   snake: {fileID: 1011838186}
+--- !u!114 &1850436890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850436887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6cc2ba85aff9fcf45bbf69010e46112d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

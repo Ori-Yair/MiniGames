@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class SnakeMove : MonoBehaviour
 {
-    private enum Direction
+    public enum Direction
     {
-        Up,
+        Left,
         Down,
         Right,
-        Left
+        Up
     }
 
     // In seconds
@@ -49,6 +49,14 @@ public class SnakeMove : MonoBehaviour
                 snake.transform.position = new Vector3(snake.transform.position.x - moveDistance, snake.transform.position.y, snake.transform.position.z);
                 break;
         }
+    }
+
+    public void ChangeDirection(Direction moveDirection)
+    {
+        // If current and new direction are not opposite
+        if (((int)this.moveDirection + (int)moveDirection) % 2 == 1)
+            this.moveDirection = moveDirection;
+       
     }
 
 }
