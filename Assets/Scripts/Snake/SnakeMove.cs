@@ -6,6 +6,9 @@ public class SnakeMove : MonoBehaviour
 {
     private SnakeMapManager snakeMapManager;
 
+    public GameObject snakePrefab;
+    public Transform snakeParent;
+
     public enum Direction
     {
         Left,
@@ -24,7 +27,6 @@ public class SnakeMove : MonoBehaviour
     private Direction moveDirection = Direction.Right;
     private Direction lastMoveDirection = Direction.Right;
 
-    public GameObject snakePrefab;
     private List<GameObject> snake = new List<GameObject>();
 
     void Start()
@@ -42,21 +44,19 @@ public class SnakeMove : MonoBehaviour
         {
             Move();
             CheckPosition();
-            timePassed = 0;
+            timePassed = 0.0f;
         }
     }
 
     public void StartGame()
     {
         DestroySnake();
-        snake.Add(Instantiate(snakePrefab, startingPos, Quaternion.identity));
-        snake[0].transform.position = startingPos;
-
-        snakeMapManager.ResetMap(startingPos);
+        CreateSnake(startingPos);
 
         moveDirection = Direction.Right;
         lastMoveDirection = Direction.Right;
 
+        snakeMapManager.ResetMap(startingPos);
     }
 
     public void DestroySnake()
@@ -65,15 +65,19 @@ public class SnakeMove : MonoBehaviour
         {
             Destroy(snakePart);
         }
+
         snake.Clear();
     }
+
     private void Move()
     {
+        // Move all non-head parts
         for (int i = snake.Count - 1; i > 0; i--)
         {
             snake[i].transform.position = snake[i - 1].transform.position;
         }
 
+        // Move head
         switch (moveDirection)
         {
             case Direction.Up:
@@ -95,10 +99,12 @@ public class SnakeMove : MonoBehaviour
     private void CheckPosition()
     { 
         Vector2 snakePos = new Vector2(snake[0].transform.position.x, snake[0].transform.position.y);
-        Vector2 tail = snakeMapManager.MoveSnake(snakePos);
-        if (!tail.Equals(snakeMapManager.INVALIDPOS))
+        Vector2 tailPos = snakeMapManager.MoveSnake(snakePos);
+
+        // If new tail needs to be created
+        if (!tailPos.Equals(snakeMapManager.INVALIDPOS))
         {
-            snake.Add(Instantiate(snakePrefab, tail, Quaternion.identity));
+            CreateSnake(tailPos);
         }
         else
         {
@@ -119,6 +125,12 @@ public class SnakeMove : MonoBehaviour
         {
             this.moveDirection = moveDirection;
         }
+    }
+
+    public void CreateSnake(Vector2 pos)
+    {
+        snake.Add(Instantiate(snakePrefab, pos, Quaternion.identity));
+        snake[snake.Count - 1].transform.SetParent(snakeParent);
     }
 
 }
