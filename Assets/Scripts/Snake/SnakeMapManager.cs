@@ -46,6 +46,7 @@ public class SnakeMapManager : MonoBehaviour
 
     private void BuildHorizontalWall(int y)
     {
+        // Avoids double-building corners
         for (int x = 1; x < mapWidth; x++)
         {
             CreateWall(new Vector2(x, y));
@@ -60,9 +61,19 @@ public class SnakeMapManager : MonoBehaviour
 
     public bool CheckAlive(Vector2 snakePosition)
     {
+        // If snake hit wall
         foreach (Transform wall in wallParent)
         {
             if (snakePosition.Equals(new Vector2(wall.transform.position.x, wall.transform.position.y)))
+            {
+                return false;
+            }
+        }
+
+        // If snake ate himself
+        for (int i = 1; i < snakePositions.Count; i++)
+        {
+            if (snakePosition.Equals(snakePositions[i]))
             {
                 return false;
             }
@@ -80,11 +91,14 @@ public class SnakeMapManager : MonoBehaviour
     public Vector2 MoveSnake(Vector2 newPos)
     {
         snakePositions.Insert(0, newPos);
+        
+        // If cherries weren't eaten., remove tail
         if (!CheckAteCherries(newPos))
         {
             snakePositions.RemoveAt(snakePositions.Count - 1);
             return INVALIDPOS;
         }
+
         return snakePositions[snakePositions.Count - 1];
     }
 
@@ -105,6 +119,7 @@ public class SnakeMapManager : MonoBehaviour
         int x = 0;
         int y = 0; 
 
+        // Don't spawn cherries on snake
         do
         {
             x = Random.Range(1, mapWidth);

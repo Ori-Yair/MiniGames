@@ -42,7 +42,7 @@ public class SnakeMove : MonoBehaviour
         {
             Move();
             CheckPosition();
-            timePassed = 0;
+            timePassed = 0.0f;
         }
     }
 
@@ -50,13 +50,11 @@ public class SnakeMove : MonoBehaviour
     {
         DestroySnake();
         snake.Add(Instantiate(snakePrefab, startingPos, Quaternion.identity));
-        snake[0].transform.position = startingPos;
-
-        snakeMapManager.ResetMap(startingPos);
 
         moveDirection = Direction.Right;
         lastMoveDirection = Direction.Right;
 
+        snakeMapManager.ResetMap(startingPos);
     }
 
     public void DestroySnake()
@@ -65,15 +63,19 @@ public class SnakeMove : MonoBehaviour
         {
             Destroy(snakePart);
         }
+
         snake.Clear();
     }
+
     private void Move()
     {
+        // Move all non-head parts
         for (int i = snake.Count - 1; i > 0; i--)
         {
             snake[i].transform.position = snake[i - 1].transform.position;
         }
 
+        // Move head
         switch (moveDirection)
         {
             case Direction.Up:
@@ -96,6 +98,8 @@ public class SnakeMove : MonoBehaviour
     { 
         Vector2 snakePos = new Vector2(snake[0].transform.position.x, snake[0].transform.position.y);
         Vector2 tail = snakeMapManager.MoveSnake(snakePos);
+
+        // If new tail needs to be created
         if (!tail.Equals(snakeMapManager.INVALIDPOS))
         {
             snake.Add(Instantiate(snakePrefab, tail, Quaternion.identity));
