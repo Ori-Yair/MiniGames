@@ -11,8 +11,8 @@ public class SnakeMapManager : MonoBehaviour
     public GameObject cherriesPrefab;
     private GameObject cherries = null;
     
-    private int mapWidth = 6; //18
-    private int mapHeight = 4; //10
+    private int mapWidth = 18;
+    private int mapHeight = 10;
 
     private List<Vector2> snakePositions = new List<Vector2>();
 
@@ -79,13 +79,12 @@ public class SnakeMapManager : MonoBehaviour
 
     public Vector2 MoveSnake(Vector2 newPos)
     {
-        snakePositions.Add(newPos);
+        snakePositions.Insert(0, newPos);
         if (!CheckAteCherries(newPos))
         {
             snakePositions.RemoveAt(snakePositions.Count - 1);
             return INVALIDPOS;
         }
-
         return snakePositions[snakePositions.Count - 1];
     }
 

@@ -13,8 +13,8 @@ public class SnakeMove : MonoBehaviour
         Right,
         Up
     }
-    //9 5
-    private Vector2 startingPos = new Vector2(1, 1);
+
+    private Vector2 startingPos = new Vector2(9, 5);
 
     // In seconds
     private float moveTimer = 0.4f;
