@@ -18,7 +18,7 @@ public class SnakeMove : MonoBehaviour
     private int startingY = 5;
 
     // In seconds
-    private float moveTimer = 0.6f;
+    private float moveTimer = 0.4f;
     private float timePassed = 0.0f;
 
     private float moveDistance = 1.0f;
