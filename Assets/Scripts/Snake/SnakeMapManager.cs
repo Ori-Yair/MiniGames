@@ -9,17 +9,13 @@ public class SnakeMapManager : MonoBehaviour
     
     private int mapWidth = 18;
     private int mapHeight = 10;
+
+    private List<Vector2> snakePositions = new List<Vector2>();
     
     // Start is called before the first frame update
     void Start()
     {
         BuildWall();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void BuildWall()
@@ -34,7 +30,7 @@ public class SnakeMapManager : MonoBehaviour
     {
         for (int y = 0; y < mapHeight + 1; y++)
         {
-            CreateWall(x, y);
+            CreateWall(new Vector2(x, y));
         }
     }
 
@@ -42,26 +38,40 @@ public class SnakeMapManager : MonoBehaviour
     {
         for (int x = 1; x < mapWidth; x++)
         {
-            CreateWall(x, y);
+            CreateWall(new Vector2(x, y));
         }
     }
 
-    private void CreateWall(int x, int y)
+    private void CreateWall(Vector2 pos)
     {
-        GameObject currWall = Instantiate(wallPrefab, new Vector2(x, y), Quaternion.identity);
+        GameObject currWall = Instantiate(wallPrefab, pos, Quaternion.identity);
         currWall.transform.SetParent(wallParent);
     }
 
-    public bool CheckAlive(int x, int y)
+    public bool CheckAlive(Vector2 snakePosition)
     {
         foreach (Transform wall in wallParent)
         {
-            if (x == wall.position.x && y == wall.position.y)
+            if (snakePosition.Equals(new Vector2(wall.transform.position.x, wall.transform.position.y)))
             {
                 return false;
             }
         }
 
         return true;
+    }
+
+    public void FillSnakePositions(Vector2 snakePos)
+    {
+        snakePositions.Clear();
+        snakePositions.Add(snakePos);
+    }
+
+    public bool MoveSnake(Vector2 newPos)
+    {
+        snakePositions.Add(newPos);
+        snakePositions.RemoveAt(snakePositions.Count - 1);
+
+        return CheckAlive(newPos);
     }
 }
