@@ -4,19 +4,28 @@ using UnityEngine;
 
 public class SnakeMapManager : MonoBehaviour
 {
+    public Vector2 INVALIDPOS = new Vector2(-1, -1);
+
     public GameObject wallPrefab;
     public Transform wallParent;
     public GameObject cherriesPrefab;
     private GameObject cherries = null;
     
-    private int mapWidth = 18;
-    private int mapHeight = 10;
+    private int mapWidth = 6; //18
+    private int mapHeight = 4; //10
 
     private List<Vector2> snakePositions = new List<Vector2>();
 
     void Start()
     {
         BuildWall();
+    }
+
+    public void ResetMap(Vector2 startingPos)
+    {
+        FillSnakePositions(startingPos);
+        Destroy(cherries);
+        SpawnCherries();
     }
 
     private void BuildWall()
@@ -68,15 +77,16 @@ public class SnakeMapManager : MonoBehaviour
         snakePositions.Add(snakePos);
     }
 
-    public bool MoveSnake(Vector2 newPos)
+    public Vector2 MoveSnake(Vector2 newPos)
     {
         snakePositions.Add(newPos);
         if (!CheckAteCherries(newPos))
         {
             snakePositions.RemoveAt(snakePositions.Count - 1);
+            return INVALIDPOS;
         }
 
-        return CheckAlive(newPos);
+        return snakePositions[snakePositions.Count - 1];
     }
 
     private bool CheckAteCherries(Vector2 snakePos)
@@ -98,8 +108,8 @@ public class SnakeMapManager : MonoBehaviour
 
         do
         {
-            x = Random.Range(1, 18);
-            y = Random.Range(1, 10);
+            x = Random.Range(1, mapWidth);
+            y = Random.Range(1, mapHeight);
         } while (snakePositions.Contains(new Vector2(x, y)));
 
         cherries = Instantiate(cherriesPrefab, new Vector2(x, y), Quaternion.identity);

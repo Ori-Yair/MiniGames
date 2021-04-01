@@ -13,9 +13,8 @@ public class SnakeMove : MonoBehaviour
         Right,
         Up
     }
-
-    private int startingX = 9;
-    private int startingY = 5;
+    //9 5
+    private Vector2 startingPos = new Vector2(1, 1);
 
     // In seconds
     private float moveTimer = 0.4f;
@@ -25,7 +24,8 @@ public class SnakeMove : MonoBehaviour
     private Direction moveDirection = Direction.Right;
     private Direction lastMoveDirection = Direction.Right;
 
-    public GameObject snake;
+    public GameObject snakePrefab;
+    private List<GameObject> snake = new List<GameObject>();
 
     void Start()
     {
@@ -48,46 +48,68 @@ public class SnakeMove : MonoBehaviour
 
     public void StartGame()
     {
-        snake.transform.position = new Vector2(startingX, startingY);
-        snakeMapManager.FillSnakePositions(new Vector2(startingX, startingY));
-        snakeMapManager.SpawnCherries();
+        DestroySnake();
+        snake.Add(Instantiate(snakePrefab, startingPos, Quaternion.identity));
+        snake[0].transform.position = startingPos;
+
+        snakeMapManager.ResetMap(startingPos);
 
         moveDirection = Direction.Right;
         lastMoveDirection = Direction.Right;
 
     }
 
+    public void DestroySnake()
+    {
+        foreach (GameObject snakePart in snake)
+        {
+            Destroy(snakePart);
+        }
+        snake.Clear();
+    }
     private void Move()
     {
+        for (int i = snake.Count - 1; i > 0; i--)
+        {
+            snake[i].transform.position = snake[i - 1].transform.position;
+        }
+
         switch (moveDirection)
         {
             case Direction.Up:
-                snake.transform.position = new Vector2(snake.transform.position.x, snake.transform.position.y + moveDistance);
+                snake[0].transform.position = new Vector2(snake[0].transform.position.x, snake[0].transform.position.y + moveDistance);
                 break;
             case Direction.Down:
-                snake.transform.position = new Vector2(snake.transform.position.x, snake.transform.position.y - moveDistance);
+                snake[0].transform.position = new Vector2(snake[0].transform.position.x, snake[0].transform.position.y - moveDistance);
                 break;
             case Direction.Right:
-                snake.transform.position = new Vector2(snake.transform.position.x + moveDistance, snake.transform.position.y);
+                snake[0].transform.position = new Vector2(snake[0].transform.position.x + moveDistance, snake[0].transform.position.y);
                 break;
             case Direction.Left:
-                snake.transform.position = new Vector2(snake.transform.position.x - moveDistance, snake.transform.position.y);
+                snake[0].transform.position = new Vector2(snake[0].transform.position.x - moveDistance, snake[0].transform.position.y);
                 break;
         }
 
-        
     }
 
     private void CheckPosition()
     { 
-        if (snakeMapManager.MoveSnake(new Vector2(snake.transform.position.x, snake.transform.position.y)))
+        Vector2 snakePos = new Vector2(snake[0].transform.position.x, snake[0].transform.position.y);
+        Vector2 tail = snakeMapManager.MoveSnake(snakePos);
+        if (!tail.Equals(snakeMapManager.INVALIDPOS))
         {
-            lastMoveDirection = moveDirection;
+            snake.Add(Instantiate(snakePrefab, tail, Quaternion.identity));
         }
         else
         {
-            StartGame();
+            if (!snakeMapManager.CheckAlive(snakePos))
+            {
+                StartGame();
+                return;
+            }
         }
+
+        lastMoveDirection = moveDirection;
     }
 
     public void ChangeDirection(Direction moveDirection)
