@@ -71,9 +71,24 @@ public class SnakeMapManager : MonoBehaviour
     public bool MoveSnake(Vector2 newPos)
     {
         snakePositions.Add(newPos);
-        snakePositions.RemoveAt(snakePositions.Count - 1);
+        if (!CheckAteCherries(newPos))
+        {
+            snakePositions.RemoveAt(snakePositions.Count - 1);
+        }
 
         return CheckAlive(newPos);
+    }
+
+    private bool CheckAteCherries(Vector2 snakePos)
+    {
+        if (snakePos.Equals(new Vector2(cherries.transform.position.x, cherries.transform.position.y)))
+        {
+            Destroy(cherries);
+            SpawnCherries();
+            return true;
+        }
+
+        return false;
     }
 
     public void SpawnCherries()
