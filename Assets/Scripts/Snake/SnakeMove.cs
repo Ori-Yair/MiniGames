@@ -50,6 +50,7 @@ public class SnakeMove : MonoBehaviour
     {
         snake.transform.position = new Vector2(startingX, startingY);
         snakeMapManager.FillSnakePositions(new Vector2(startingX, startingY));
+        snakeMapManager.SpawnCherries();
 
         moveDirection = Direction.Right;
         lastMoveDirection = Direction.Right;

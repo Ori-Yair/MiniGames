@@ -6,13 +6,14 @@ public class SnakeMapManager : MonoBehaviour
 {
     public GameObject wallPrefab;
     public Transform wallParent;
+    public GameObject cherriesPrefab;
+    private GameObject cherries = null;
     
     private int mapWidth = 18;
     private int mapHeight = 10;
 
     private List<Vector2> snakePositions = new List<Vector2>();
-    
-    // Start is called before the first frame update
+
     void Start()
     {
         BuildWall();
@@ -73,5 +74,19 @@ public class SnakeMapManager : MonoBehaviour
         snakePositions.RemoveAt(snakePositions.Count - 1);
 
         return CheckAlive(newPos);
+    }
+
+    public void SpawnCherries()
+    {
+        int x = 0;
+        int y = 0; 
+
+        do
+        {
+            x = Random.Range(1, 18);
+            y = Random.Range(1, 10);
+        } while (snakePositions.Contains(new Vector2(x, y)));
+
+        cherries = Instantiate(cherriesPrefab, new Vector2(x, y), Quaternion.identity);
     }
 }

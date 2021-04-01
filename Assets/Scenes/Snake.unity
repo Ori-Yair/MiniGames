@@ -390,3 +390,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallPrefab: {fileID: 7566789851426679529, guid: 85fc75a91ac8d194dabf528193be26e4, type: 3}
   wallParent: {fileID: 164718022}
+  cherriesPrefab: {fileID: 2368532826817623774, guid: 312cd814f45d5c244919f868d9ac2087, type: 3}
